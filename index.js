@@ -14,7 +14,7 @@ function gameObject() {
                     blocks: 1,
                     slamDunks: 1,
                 },
-                "Reggie Evens": {
+                "Reggie Evans": {
                     number: 30,
                     shoe: 14,
                     points: 12,
@@ -100,7 +100,7 @@ function gameObject() {
                     blocks: 1,
                     slamDunks: 0,
                 },
-                "Brendan Hayword": {
+                "Brendan Haywood": {
                     number: 33,
                     shoe: 15,
                     points: 6,
@@ -113,4 +113,75 @@ function gameObject() {
             },
         },
     };
+
+}
+
+/* Helper to find a player by name */
+function findPlayer(playerName) {
+  const game = gameObject();
+  if (game.home.players[playerName]) return game.home.players[playerName];
+  if (game.away.players[playerName]) return game.away.players[playerName];
+  return undefined;
+}
+
+/* 1) numPointsScored(playerName) -> number of points */
+function numPointsScored(playerName) {
+  const player = findPlayer(playerName);
+  return player ? player.points : undefined;
+}
+
+/* 2) shoeSize(playerName) -> shoe size */
+function shoeSize(playerName) {
+  const player = findPlayer(playerName);
+  return player ? player.shoe : undefined;
+}
+
+/* 3) teamColors(teamName) -> array of colors */
+function teamColors(teamName) {
+  const game = gameObject();
+  if (game.home.teamName === teamName) return game.home.colors;
+  if (game.away.teamName === teamName) return game.away.colors;
+  return undefined;
+}
+
+/* 4) teamNames() -> array with both team names */
+function teamNames() {
+  const game = gameObject();
+  return [game.home.teamName, game.away.teamName];
+}
+
+/* 5) playerNumbers(teamName) -> array of jersey numbers for that team */
+function playerNumbers(teamName) {
+  const game = gameObject();
+  let playersObj = null;
+  if (game.home.teamName === teamName) playersObj = game.home.players;
+  else if (game.away.teamName === teamName) playersObj = game.away.players;
+  else return undefined;
+  return Object.values(playersObj).map((p) => p.number);
+}
+
+/* 6) playerStats(playerName) -> the stats object for the player (shallow copy) */
+function playerStats(playerName) {
+  const player = findPlayer(playerName);
+  // Return a shallow copy using Object.assign() per the test hint
+  return player ? Object.assign({}, player) : undefined;
+}
+
+/* 7) bigShoeRebounds() -> rebounds for player with biggest shoe size */
+function bigShoeRebounds() {
+  const game = gameObject();
+  // Combine players into one object using Object.assign()
+  const allPlayers = Object.assign({}, game.home.players, game.away.players);
+  let maxShoe = -Infinity;
+  let rebounds = undefined;
+  for (const name in allPlayers) {
+    if (Object.prototype.hasOwnProperty.call(allPlayers, name)) {
+      const p = allPlayers[name];
+      if (p.shoe > maxShoe) {
+        maxShoe = p.shoe;
+        rebounds = p.rebounds;
+      }
+    }
+  }
+  return rebounds;
 }
